@@ -67,7 +67,7 @@ describe("users", () => {
     });
   });
 
-  describe.only("#list", () => {
+  describe("#list", () => {
     const usernames = ["rp-3", "muddybarefeet"];
     const users = usernames.map((username) => ({ username }));
     before(() => Promise.all(users.map(models.users.create)));
@@ -88,7 +88,7 @@ describe("users", () => {
   });
 });
 
-describe("channels", () => {
+describe.only("channels", () => {
   describe("#create", () => {
     const params = { name: "" };
 
@@ -129,7 +129,7 @@ describe("channels", () => {
     const channels = channelNames.map((name) => ({ name }));
     before(() => Promise.all(channels.map(models.channels.create)));
     after(() => knex("channels").del());
-
+    console.log("models", models.channels);
     it("lists all channels", () =>
       models.channels.list().then((resp) => {
         expect(channelNames).to.include(resp[0].name);
