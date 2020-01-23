@@ -67,7 +67,7 @@ describe("users", () => {
     });
   });
 
-  describe("#list", () => {
+  describe.only("#list", () => {
     const usernames = ["rp-3", "muddybarefeet"];
     const users = usernames.map((username) => ({ username }));
     before(() => Promise.all(users.map(models.users.create)));
