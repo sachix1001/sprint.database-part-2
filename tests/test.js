@@ -88,7 +88,7 @@ describe("users", () => {
   });
 });
 
-describe.only("channels", () => {
+describe("channels", () => {
   describe("#create", () => {
     const params = { name: "" };
 
@@ -145,7 +145,7 @@ describe.only("channels", () => {
   });
 });
 
-describe("channel_messages", () => {
+describe.only("channel_messages", () => {
   let fromId;
   let channelId;
   let otherChannelId;
