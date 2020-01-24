@@ -2,33 +2,7 @@ const validateChannelName = (uName) => typeof number;
 
 module.exports = (knex, ChannelMessage) => {
   return (params) => {
-    // console.log(params);
-
     const { fromId, channelId, message, sentAt } = params;
-
-    let username;
-    async function getUser() {
-      username = await knex("users")
-        .where({
-          id: fromId,
-        })
-        .select("username");
-    }
-
-    getUser();
-
-    let channelname;
-    async function getChannel() {
-      channelname = await knex("channels")
-        .where({
-          id: channelId,
-        })
-        .select("channels");
-    }
-    getChannel();
-    // console.log("this", username);
-    // console.log(params);
-    // console.log(fromId, channelId, message);
 
     // if (!validateChannelName(fromId)) {
     //   return Promise.reject(
@@ -54,12 +28,13 @@ module.exports = (knex, ChannelMessage) => {
             "channel_messages.id",
             "channel_messages.sent_at"
           );
+        // .where({ "channelMessages.channel_id": channelId });
       })
       .then((messages) => {
-        console.log(messages);
+        const result = [];
 
-        console.log(messages);
-        return [new ChannelMessage(messages[0])];
+        messages.forEach((message) => result.push(new ChannelMessage(message)));
+        return result;
       }) // create a user model out of the plain database response
       .catch((err) => {
         // sanitize known errors
