@@ -3,8 +3,8 @@ module.exports = (knex, ChannelMessage) => {
     return knex("channel_messages")
       .select()
       .then((users) => {
-        const result = [];
         console.log(users);
+        const result = [];
         users.map((user) => result.push(new ChannelMessage(user)));
         console.log(result);
         return result;

@@ -2,9 +2,31 @@ const validateChannelName = (uName) => typeof number;
 
 module.exports = (knex, ChannelMessage) => {
   return (params) => {
-    console.log(params);
-    const { fromId, channelId, message } = params;
+    // console.log(params);
 
+    const { fromId, channelId, message, sentAt } = params;
+
+    let username;
+    async function getUser() {
+      username = await knex("users")
+        .where({
+          id: fromId,
+        })
+        .select("username");
+    }
+
+    getUser();
+
+    let channelname;
+    async function getChannel() {
+      channelname = await knex("channels")
+        .where({
+          id: channelId,
+        })
+        .select("channels");
+    }
+    getChannel();
+    // console.log("this", username);
     // console.log(params);
     // console.log(fromId, channelId, message);
 
@@ -16,20 +38,28 @@ module.exports = (knex, ChannelMessage) => {
 
     return knex("channel_messages")
       .insert({
-        from: fromId,
-        to: channelId,
+        from_id: fromId,
+        channel_id: channelId,
+        sent_at: sentAt,
         message,
       })
       .then(() => {
-        console.log("working");
         return knex("channel_messages")
-          .where({ fromId })
-          .select();
+          .join("users", "users.id", "=", "channel_messages.from_id")
+          .join("channels", "channels.id", "=", "channel_messages.channel_id")
+          .select(
+            "users.username as from",
+            "channels.name as to",
+            "channel_messages.message",
+            "channel_messages.id",
+            "channel_messages.sent_at"
+          );
       })
-      .then((channel) => {
-        // console.log(new Channel(channel.pop()));
+      .then((messages) => {
+        console.log(messages);
 
-        return new ChannelMessage(channel.pop());
+        console.log(messages);
+        return [new ChannelMessage(messages[0])];
       }) // create a user model out of the plain database response
       .catch((err) => {
         // sanitize known errors
@@ -37,7 +67,7 @@ module.exports = (knex, ChannelMessage) => {
         //   err.message.match("duplicate key value") ||
         //   err.message.match("UNIQUE constraint failed")
         // )
-        return Promise.reject(new Error("That channel already exists"));
+        return Promise.reject(new Error("It is wrong, morron"));
 
         // throw unknown errors
         return Promise.reject(err);

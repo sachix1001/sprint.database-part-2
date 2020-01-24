@@ -4,12 +4,12 @@ exports.up = function(knex, Promise) {
     t.increments() // auto-incrementing id column
       .index(); // index this column
 
-    t.integer("to")
-      .references("id")
+    t.string("channel_id")
+      .references("name")
       .inTable("channels");
 
-    t.integer("from")
-      .references("id")
+    t.string("from_id")
+      .references("username")
       .inTable("users");
 
     t.string("message", 50) // maximum length of 50 characters
