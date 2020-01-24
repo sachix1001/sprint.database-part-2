@@ -4,24 +4,20 @@ exports.up = function(knex, Promise) {
     t.increments() // auto-incrementing id column
       .index(); // index this column
 
-    t.integer("channelId")
-      .foreign("id")
-      .references("channels");
+    t.integer("to")
+      .references("id")
+      .inTable("channels");
 
-    t.integer("fromId")
-      .foreign("id")
-      .references("users");
+    t.integer("from")
+      .references("id")
+      .inTable("users");
 
-    t.string("message", 50) // maximum length of 15 characters
+    t.string("message", 50) // maximum length of 50 characters
       .notNullable(); // add a not-null constraint to this column
 
-    t.integer("sentAt")
-      .foreign("id")
-      .references("users");
-
-    //   t.timestamp("created_at")
-    //     .notNullable()
-    //     .defaultTo(knex.fn.now()); // default to the current time
+    t.timestamp("sent_at")
+      // .notNullable()
+      .defaultTo(knex.fn.now()); // default to the current time
   });
 };
 
